@@ -5,10 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Penicó Urbanos Desarrollos | Mendoza, Argentina</title>
   <meta name="description" content="Penicó Urbanos Desarrollos - Empresa líder en desarrollo urbano e infraestructura en Mendoza, Argentina. Transformamos terrenos en barrios de alta calidad con infraestructura completa." />
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" as="image" href="hero-bg.png" fetchpriority="high" />
+  <link rel="preload" as="image" href="logo.png" fetchpriority="high" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Cormorant+Garamond:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  
+  <!-- DNS prefetch for potential external resources -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
 </head>
 <body>
 
@@ -33,7 +40,7 @@
 
   <!-- ====== HERO ====== -->
   <section id="inicio" class="hero">
-    <div class="hero-bg" style="background-image: url('hero-bg.png');"></div>
+    <div class="hero-bg" style="background-image: url('hero-bg.png');" role="img" aria-label="Vista panorámica de Mendoza"></div>
     <div class="hero-overlay"></div>
     <div class="hero-content">
       <p class="hero-eyebrow reveal-up">Mendoza · Argentina</p>
@@ -134,7 +141,7 @@
             </div>
           </div>
           <div class="team-image-bg">
-            <img src="mendoza.png" alt="Paisaje Mendoza" />
+            <img src="mendoza.png" alt="Paisaje Mendoza" loading="lazy" decoding="async" />
             <div class="team-image-overlay">
               <span>Mendoza, Argentina</span>
             </div>
@@ -154,7 +161,7 @@
       <!-- Proyecto Plátanos Featured -->
       <div class="proyecto-featured reveal-up">
         <div class="proyecto-featured-image">
-          <img src="platanos-entrada.png" alt="Plátanos Barrio Privado" />
+          <img src="platanos-entrada.png" alt="Plátanos Barrio Privado" loading="lazy" decoding="async" />
           <div class="proyecto-badge">Proyecto Destacado</div>
         </div>
         <div class="proyecto-featured-info">
@@ -261,15 +268,15 @@
       </div>
       <div class="gallery-grid">
         <div class="gallery-item gallery-large reveal-up">
-          <img src="platanos-entrada.png" alt="Portal de acceso Plátanos" />
+          <img src="platanos-entrada.png" alt="Portal de acceso Plátanos" loading="lazy" decoding="async" />
           <div class="gallery-caption">Portal de Acceso Monumental</div>
         </div>
         <div class="gallery-item reveal-up">
-          <img src="platanos-aereo.png" alt="Vista aérea Plátanos" />
+          <img src="platanos-aereo.png" alt="Vista aérea Plátanos" loading="lazy" decoding="async" />
           <div class="gallery-caption">Vista Aérea del Proyecto</div>
         </div>
         <div class="gallery-item reveal-up">
-          <img src="mendoza.png" alt="Mendoza" />
+          <img src="mendoza.png" alt="Mendoza" loading="lazy" decoding="async" />
           <div class="gallery-caption">La Colonia · Junín · Mendoza</div>
         </div>
       </div>
@@ -499,7 +506,7 @@
   <footer class="footer">
     <div class="container footer-grid">
       <div class="footer-brand">
-        <img src="logo.png" alt="Penicó Urbanos Desarrollos" class="footer-logo" />
+        <img src="logo.png" alt="Penicó Urbanos Desarrollos" class="footer-logo" loading="lazy" decoding="async" />
         <p>Desarrollamos barrios de alta calidad con infraestructura completa en Mendoza, Argentina.</p>
       </div>
       <div class="footer-links">

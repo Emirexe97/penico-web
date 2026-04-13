@@ -1,19 +1,12 @@
 /* ================================================================
-   PENICÓ URBANOS DESARROLLOS — Main JavaScript
+   PENICÓ URBANOS DESARROLLOS — Main JavaScript (Optimized)
    ================================================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
 
   // ── 1. NAVBAR scroll behavior ──────────────────────────────────
   const navbar = document.getElementById('navbar');
-
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 60) {
-      navbar.classList.add('scrolled');
-    } else {
-      navbar.classList.remove('scrolled');
-    }
-  }, { passive: true });
+  let lastScrollY = window.scrollY;
 
   // ── 2. Mobile hamburger menu ───────────────────────────────────
   const hamburger = document.getElementById('hamburger');
@@ -22,16 +15,14 @@ document.addEventListener('DOMContentLoaded', () => {
   hamburger.addEventListener('click', () => {
     navLinks.classList.toggle('open');
     const isOpen = navLinks.classList.contains('open');
-    // Animate hamburger to X
-    const spans = hamburger.querySelectorAll('span');
     if (isOpen) {
-      spans[0].style.transform = 'translateY(7px) rotate(45deg)';
-      spans[1].style.opacity   = '0';
-      spans[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+      hamburger.children[0].style.transform = 'translateY(7px) rotate(45deg)';
+      hamburger.children[1].style.opacity   = '0';
+      hamburger.children[2].style.transform = 'translateY(-7px) rotate(-45deg)';
     } else {
-      spans[0].style.transform = '';
-      spans[1].style.opacity   = '';
-      spans[2].style.transform = '';
+      hamburger.children[0].style.transform = '';
+      hamburger.children[1].style.opacity   = '';
+      hamburger.children[2].style.transform = '';
     }
   });
 
@@ -56,9 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const revealEls = document.querySelectorAll('.reveal-up, .reveal-left, .reveal-right');
 
   const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
+    entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        // Stagger siblings
         const siblings = [...entry.target.parentElement.children]
           .filter(el => el.classList.contains('reveal-up') || 
                         el.classList.contains('reveal-left') || 
@@ -96,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function update(now) {
       const elapsed  = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      // Ease out expo
       const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
       el.textContent = Math.round(eased * target);
       if (progress < 1) requestAnimationFrame(update);
@@ -141,18 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // ── 8. Back to top button ──────────────────────────────────────
   const backToTop = document.getElementById('backToTop');
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 400) {
-      backToTop.classList.add('visible');
-    } else {
-      backToTop.classList.remove('visible');
-    }
-  }, { passive: true });
-
-  backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
   // ── 9. Contact Form validation ─────────────────────────────────
   const form       = document.getElementById('contactForm');
   const submitBtn  = document.getElementById('submitBtn');
@@ -164,7 +141,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (validateForm()) {
         submitBtn.disabled  = true;
         submitBtn.querySelector('.btn-text').textContent = 'Enviando...';
-        // Simulate form submission (replace with actual backend call)
         setTimeout(() => {
           form.reset();
           submitBtn.disabled  = false;
@@ -175,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Real-time validation on blur
     ['nombre', 'email', 'mensaje'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.addEventListener('blur', () => validateField(el));
@@ -210,30 +185,62 @@ document.addEventListener('DOMContentLoaded', () => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   }
 
-  // ── 10. Parallax on hero ───────────────────────────────────────
+  // ── 10. Optimized scroll handler (combines all scroll events) ─
   const heroPx = document.querySelector('.hero-bg');
-  if (heroPx) {
-    window.addEventListener('scroll', () => {
-      const scrolled = window.scrollY;
-      if (scrolled < window.innerHeight) {
-        heroPx.style.transform = `translateY(${scrolled * 0.3}px)`;
-      }
-    }, { passive: true });
-  }
-
-  // ── 11. CTA parallax ──────────────────────────────────────────
   const ctaBg = document.querySelector('.cta-bg');
-  if (ctaBg) {
-    window.addEventListener('scroll', () => {
-      const rect   = ctaBg.parentElement.getBoundingClientRect();
-      const offset = rect.top * 0.25;
+
+  function handleScroll() {
+    const scrolled = window.scrollY;
+    
+    // Navbar
+    if (scrolled > 60) {
+      navbar.classList.add('scrolled');
+    } else {
+      navbar.classList.remove('scrolled');
+    }
+
+    // Back to top
+    if (backToTop) {
+      if (scrolled > 400) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    }
+
+    // Hero parallax (only when visible)
+    if (heroPx && scrolled < window.innerHeight) {
+      heroPx.style.transform = `translateY(${scrolled * 0.3}px)`;
+    }
+
+    // CTA parallax (only when visible)
+    if (ctaBg) {
+      const rect = ctaBg.parentElement.getBoundingClientRect();
       if (rect.top < window.innerHeight && rect.bottom > 0) {
+        const offset = rect.top * 0.25;
         ctaBg.style.transform = `translateY(${offset}px)`;
       }
-    }, { passive: true });
+    }
+
+    lastScrollY = scrolled;
   }
 
-  // ── 12. Image lazy load fade-in ───────────────────────────────
+  // Use requestAnimationFrame for smooth scroll performance
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        handleScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // Initial call
+  handleScroll();
+
+  // ── 11. Image lazy load fade-in ───────────────────────────────
   const images = document.querySelectorAll('img');
   images.forEach(img => {
     img.style.opacity = '0';
